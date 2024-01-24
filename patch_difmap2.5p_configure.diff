@@ -1,5 +1,5 @@
---- configure.orig	2019-12-01 13:31:58.000000000 -0500
-+++ configure	2022-12-01 13:32:25.000000000 -0500
+--- configure_org	2024-01-24 12:58:29
++++ configure	2024-01-24 13:33:26
 @@ -325,7 +325,7 @@
  ;;
  
@@ -9,7 +9,31 @@
      FC=gfortran
      CFLAGS="$CFLAGS -Dapple_osx"
  #
-@@ -346,7 +346,7 @@
+@@ -340,13 +340,28 @@
+       echo ' ';echo ' CCLIB="/usr/local/lib/libgcc.a"';echo ' '
+       exit 1
+     fi
+-    CCLIB="$CCLIB \
+-     /System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation \
+-     /System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit"
++
++    FLIBLOC="/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"
++    if ! [ -f $FLIBLOC ]; then
++      FLIBLOC="/System/Library/Frameworks/Foundation.framework/Versions/Current/Resources/BridgeSupport/Foundation.dylib"
++      if ! [ -f $FLIBLOC ]; then
++        FLIBLOC=
++      fi
++    fi
++
++    ALIBLOC="/System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit"
++    if ! [ -f $ALIBLOC ]; then
++      ALIBLOC="/System/Library/Frameworks/AppKit.framework/Versions/Current/Resources/BridgeSupport/AppKit.dylib"
++      if ! [ -f $ALIBLOC ]; then
++        ALIBLOC=
++      fi
++    fi
++
++    CCLIB="$CCLIB $FLIBLOC $ALIBLOC"
  ;;
  
    intel-osx-gcc)   # Macintosh computer running OSX, using the Gnu C compiler.
@@ -18,3 +42,31 @@
      FC=gfortran
      CFLAGS="$CFLAGS -Dintel_osx"
  #
+@@ -361,9 +376,24 @@
+       echo ' ';echo ' CCLIB="/usr/local/lib/libgcc.a"';echo ' '
+       exit 1
+     fi
+-    CCLIB="$CCLIB \
+-     /System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation \
+-     /System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit"
++
++    FLIBLOC="/System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation"
++    if ! [ -f $FLIBLOC ]; then
++      FLIBLOC="/System/Library/Frameworks/Foundation.framework/Versions/Current/Resources/BridgeSupport/Foundation.dylib"
++      if ! [ -f $FLIBLOC ]; then
++        FLIBLOC=
++      fi
++    fi
++
++    ALIBLOC="/System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit"
++    if ! [ -f $ALIBLOC ]; then
++      ALIBLOC="/System/Library/Frameworks/AppKit.framework/Versions/Current/Resources/BridgeSupport/AppKit.dylib"
++      if ! [ -f $ALIBLOC ]; then
++        ALIBLOC=
++      fi
++    fi
++    
++    CCLIB="$CCLIB $FLIBLOC $ALIBLOC"
+ ;;
+ 
+   *)
